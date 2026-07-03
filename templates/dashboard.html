@@ -31,7 +31,7 @@
 
         <div>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="location.reload();">
                 Atualizar
             </button>
 
@@ -81,7 +81,7 @@
 
                     <h6 class="text-muted">📄 Páginas Semana</h6>
 
-                    <h2>{{ paginas_semana|default(0) }}</h2>
+                    <h2>{{ "{:,}".format(paginas_semana).replace(",", ".") }}</h2>
 
                 </div>
 
@@ -97,7 +97,7 @@
 
                     <h6 class="text-muted">📅 Páginas Mês</h6>
 
-                    <h2>{{ paginas_mes|default(0) }}</h2>
+                    <h2>{{ "{:,}".format(paginas_mes).replace(",", ".") }}</h2>
 
                 </div>
 
@@ -116,10 +116,10 @@
                 <div class="col-md-6">
 
                     <input
-                            type="text"
-                            class="form-control"
-                            id="pesquisa"
-                            placeholder="Pesquisar unidade, impressora, modelo ou IP...">
+                        type="text"
+                        class="form-control"
+                        id="pesquisa"
+                        placeholder="Pesquisar unidade, impressora, modelo ou IP...">
 
                 </div>
 
@@ -142,19 +142,12 @@
                     <tr>
 
                         <th>Unidade</th>
-
                         <th>Nome</th>
-
                         <th>Modelo</th>
-
                         <th>IP</th>
-
                         <th class="text-end">Contador Atual</th>
-
                         <th class="text-end">Semana</th>
-
                         <th class="text-end">Mês</th>
-
                         <th>Última Leitura</th>
 
                     </tr>
@@ -168,9 +161,7 @@
                     <tr>
 
                         <td>
-
                             <strong>{{ p.unidade.nome }}</strong>
-
                         </td>
 
                         <td>{{ p.nome }}</td>
@@ -195,21 +186,13 @@
 
                         <td class="text-end">
 
-                            <span class="badge bg-secondary">
-
-                                Em breve
-
-                            </span>
+                            {{ "{:,}".format(p.paginas_semana).replace(",", ".") }}
 
                         </td>
 
                         <td class="text-end">
 
-                            <span class="badge bg-secondary">
-
-                                Em breve
-
-                            </span>
+                            {{ "{:,}".format(p.paginas_mes).replace(",", ".") }}
 
                         </td>
 
@@ -275,7 +258,7 @@ pesquisa.addEventListener("keyup", function () {
 
 });
 
-// Atualiza automaticamente a página a cada 5 minutos
+// Atualiza automaticamente a cada 5 minutos
 setTimeout(function(){
 
     location.reload();
