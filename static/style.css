@@ -1,0 +1,25 @@
+body{
+
+    background:#f4f6f9;
+
+}
+
+.card{
+
+    border:none;
+
+    border-radius:12px;
+
+}
+
+h2{
+
+    font-weight:600;
+
+}
+
+.table{
+
+    vertical-align:middle;
+
+}

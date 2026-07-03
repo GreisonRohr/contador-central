@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Contador Centralizado</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="mb-0">🖨️ Contador Centralizado</h2>
+
+            <small class="text-muted">
+                Monitoramento de Impressoras
+            </small>
+
+        </div>
+
+        <div>
+
+            <button class="btn btn-primary">
+                Atualizar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">🏢 Unidades</h6>
+
+                    <h2>{{ total_unidades }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">🖨 Impressoras</h6>
+
+                    <h2>{{ total_impressoras }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">📄 Páginas Semana</h6>
+
+                    <h2>{{ paginas_semana|default(0) }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">📅 Páginas Mês</h6>
+
+                    <h2>{{ paginas_mes|default(0) }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mt-4">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="pesquisa"
+                            placeholder="Pesquisar unidade, impressora, modelo ou IP...">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mt-4">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle" id="tabela">
+
+                    <thead class="table-light">
+
+                    <tr>
+
+                        <th>Unidade</th>
+
+                        <th>Nome</th>
+
+                        <th>Modelo</th>
+
+                        <th>IP</th>
+
+                        <th class="text-end">Contador Atual</th>
+
+                        <th class="text-end">Semana</th>
+
+                        <th class="text-end">Mês</th>
+
+                        <th>Última Leitura</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for p in impressoras %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>{{ p.unidade.nome }}</strong>
+
+                        </td>
+
+                        <td>{{ p.nome }}</td>
+
+                        <td>{{ p.modelo }}</td>
+
+                        <td>{{ p.ip }}</td>
+
+                        <td class="text-end">
+
+                            {% if p.contador_atual %}
+
+                                {{ "{:,}".format(p.contador_atual).replace(",", ".") }}
+
+                            {% else %}
+
+                                0
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-end">
+
+                            <span class="badge bg-secondary">
+
+                                Em breve
+
+                            </span>
+
+                        </td>
+
+                        <td class="text-end">
+
+                            <span class="badge bg-secondary">
+
+                                Em breve
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {% if p.ultima_leitura %}
+
+                                {{ p.ultima_leitura.strftime("%d/%m/%Y %H:%M") }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    {% if impressoras|length == 0 %}
+
+                    <tr>
+
+                        <td colspan="8" class="text-center text-muted p-5">
+
+                            Nenhuma impressora cadastrada.
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const pesquisa = document.getElementById("pesquisa");
+
+pesquisa.addEventListener("keyup", function () {
+
+    let texto = this.value.toLowerCase();
+
+    document.querySelectorAll("#tabela tbody tr").forEach(function (linha) {
+
+        linha.style.display = linha.innerText.toLowerCase().includes(texto)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+// Atualiza automaticamente a página a cada 5 minutos
+setTimeout(function(){
+
+    location.reload();
+
+},300000);
+
+</script>
+
+</body>
+
+</html>
