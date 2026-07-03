@@ -1,9 +1,10 @@
 import os
+from datetime import datetime, timedelta
 
 from flask import Flask, render_template
 
 from config import Config
-from models import db, Unidade, Impressora
+from models import db, Unidade, Impressora, Historico
 from api.routes import api
 
 app = Flask(__name__)
@@ -14,11 +15,9 @@ db.init_app(app)
 
 app.register_blueprint(api)
 
-
-from datetime import datetime, timedelta
-from sqlalchemy import func
-
-from models import db, Unidade, Impressora, Historico
+# Cria as tabelas automaticamente caso não existam
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
@@ -43,14 +42,15 @@ def dashboard():
         impressoras=impressoras,
         total_unidades=total_unidades,
         total_impressoras=total_impressoras,
-        leituras_semana=leituras_semana
+        leituras_semana=leituras_semana,
+        paginas_semana=0,
+        paginas_mes=0
     )
 
 
 if __name__ == "__main__":
-    os.makedirs("database", exist_ok=True)
-
-    with app.app_context():
-        db.create_all()
-
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )

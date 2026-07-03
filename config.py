@@ -1,22 +1,17 @@
 import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE_DIR = os.path.join(BASE_DIR, "database")
+
+os.makedirs(DATABASE_DIR, exist_ok=True)
+
 
 class Config:
 
-    database_url = os.getenv("DATABASE_URL")
-
-    if database_url:
-        # Ajuste necessário para o Render
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-        SQLALCHEMY_DATABASE_URI = database_url
-    else:
-        SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
-            BASE_DIR,
-            "database",
-            "contador.db"
-        )
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
+        DATABASE_DIR,
+        "contador.db"
+    )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
